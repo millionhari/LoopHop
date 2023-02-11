@@ -1,113 +1,91 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import React from 'react';
-import type {Node} from 'react';
-import ReactNative, {
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
+import {
+  ImageBackground,
   StyleSheet,
   Text,
-  useColorScheme,
   View,
+  ScrollView,
+  TouchableHighlight,
+  Modal,
+  Image,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
-
-const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-};
-
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  container: {
+    backgroundColor: '#f1faee',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  tile: {
+    flexBasis: '20%',
+    height: 370,
+    marginTop: 10,
+    marginBottom: 20,
+    padding: 10,
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
+  background: {
+    borderColor: '#1d3557',
+    borderRadius: 20,
   },
-  highlight: {
-    fontWeight: '700',
+  title: {
+    fontSize: 20,
+    textAlign: 'center',
   },
 });
+
+class App extends React.Component {
+  state = {
+    posts: [],
+  };
+
+  componentDidMount() {
+    fetch('https://www.reddit.com/r/pic/top.json?t=year')
+      .then(response => response.json())
+      .then(json => {
+        const posts = json.data.children.map(child => child.data);
+        this.setState({posts});
+      });
+  }
+
+  render() {
+    return (
+      <ScrollView contentContainerStyle={styles.container}>
+        {this.state.posts.map(post => (
+          <View style={styles.tile} key={post.id}>
+            <TouchableHighlight
+              style={styles.highlight}
+              underlayColor="#a8dadc"
+              // We use onPress to open Modal and to set selected image url to state
+              onPress={() =>
+                this.setState({modalVisible: true, selectedImage: post.url})
+              }>
+              <ImageBackground
+                style={{width: '100%', height: '100%'}}
+                source={{uri: post.thumbnail}}
+                imageStyle={styles.background}
+              />
+            </TouchableHighlight>
+            <Text style={styles.title}>{post.title}</Text>
+          </View>
+        ))}
+        <Modal
+          animationType={'fade'}
+          transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={() => this.setState({modalVisible: false})}>
+          {/*there is a bug in react native tv os: modal will not close properly, unless you wrap it's content into TouchableHighlight */}
+          <TouchableHighlight
+            activeOpacity={1}
+            onPress={() => this.setState({modalVisible: false})}>
+            <Image
+              source={{uri: this.state.selectedImage}}
+              style={{width: '100%', height: '100%'}}
+            />
+          </TouchableHighlight>
+        </Modal>
+      </ScrollView>
+    );
+  }
+}
 
 export default App;
