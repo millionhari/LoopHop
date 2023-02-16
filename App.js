@@ -7,9 +7,9 @@ import {
   ScrollView,
   TouchableHighlight,
   Modal,
-  Image,
   Platform,
   useTVEventHandler,
+  TabBarIOS,
 } from 'react-native';
 
 import {
@@ -22,7 +22,9 @@ import {
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {Video} from './components/Video';
 const Stack = createNativeStackNavigator();
+const Item = TabBarIOS.Item;
 
 const styles = StyleSheet.create({
   container: {
@@ -47,44 +49,6 @@ const styles = StyleSheet.create({
   },
 });
 
-const Hylia = ({navigation, lastEventType}) => {
-  // setTimeout(()=> {
-  //   navigation.navigate('forest', {title: 'forest'});
-  // }, 2000)
-  if (lastEventType === 'swipeRight') {
-    console.log('scrolling right');
-    navigation.navigate('forest', {title: 'forest'});
-  }
-  return (
-    <>
-      <Text>{lastEventType}</Text>
-      <Image
-        source={{
-          uri: 'https://i0.wp.com/www.mattvince.com/wp-content/uploads/2019/04/Lake-Hylia_thumb.jpg?fit=768%2C432&ssl=1',
-        }}
-        style={{width: '100%', height: '100%'}}
-      />
-    </>
-  );
-};
-
-const Forest = ({navigation, lastEventType}) => {
-  // setTimeout(() => {
-  //   navigation.navigate('hylia', {title: 'hylifa'});
-  // }, 2000);
-  if (lastEventType === 'swipeLeft') {
-    navigation.navigate('hylia', {title: 'hylia'});
-  }
-  return (
-    <Image
-      source={{
-        uri: 'https://wallpaperaccess.com/full/42613.jpg',
-      }}
-      style={{width: '100%', height: '100%'}}
-    />
-  );
-};
-
 const TvApp = () => {
   const [lastEventType, setLastEventType] = useState('');
   const myTVEventHandler = evt => {
@@ -97,25 +61,19 @@ const TvApp = () => {
     useTVEventHandler(myTVEventHandler);
   }
   return (
-    <NavigationContainer>
-      <Text>{lastEventType}</Text>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="hylia"
-          options={{
-            lastEventType: 'hello',
-          }}>
-          {props => <Hylia {...props} lastEventType={lastEventType} />}
-        </Stack.Screen>
-        <Stack.Screen
-          name="forest"
-          options={{
-            lastEventType: 'hello',
-          }}>
-          {props => <Forest {...props} lastEventType={lastEventType} />}
-        </Stack.Screen>
-      </Stack.Navigator>
-    </NavigationContainer>
+    <TabBarIOS>
+      <Item
+        title="Now Playing"
+        onPress={() => {
+          console.log('pressed');
+        }}
+        isTvSelectable={true}>
+        <Video uri="https://i0.wp.com/www.mattvince.com/wp-content/uploads/2019/04/Lake-Hylia_thumb.jpg?fit=768%2C432&ssl=1" />
+      </Item>
+      <Item title="Animations">
+        <Video uri="https://wallpaperaccess.com/full/42613.jpg" />
+      </Item>
+    </TabBarIOS>
   );
 };
 class App extends React.Component {
