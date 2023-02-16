@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   ImageBackground,
   StyleSheet,
@@ -8,7 +8,18 @@ import {
   TouchableHighlight,
   Modal,
   Image,
+  Platform,
+  useTVEventHandler,
 } from 'react-native';
+
+import {
+  Colors,
+  DebugInstructions,
+  Header,
+  LearnMoreLinks,
+  ReloadInstructions,
+} from 'react-native/Libraries/NewAppScreen';
+
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator();
@@ -36,18 +47,34 @@ const styles = StyleSheet.create({
   },
 });
 
-const Hylia = () => {
+const Hylia = ({navigation, lastEventType}) => {
+  // setTimeout(()=> {
+  //   navigation.navigate('forest', {title: 'forest'});
+  // }, 2000)
+  if (lastEventType === 'swipeRight') {
+    console.log('scrolling right');
+    navigation.navigate('forest', {title: 'forest'});
+  }
   return (
-    <Image
-      source={{
-        uri: 'https://i0.wp.com/www.mattvince.com/wp-content/uploads/2019/04/Lake-Hylia_thumb.jpg?fit=768%2C432&ssl=1',
-      }}
-      style={{width: '100%', height: '100%'}}
-    />
+    <>
+      <Text>{lastEventType}</Text>
+      <Image
+        source={{
+          uri: 'https://i0.wp.com/www.mattvince.com/wp-content/uploads/2019/04/Lake-Hylia_thumb.jpg?fit=768%2C432&ssl=1',
+        }}
+        style={{width: '100%', height: '100%'}}
+      />
+    </>
   );
 };
 
-const Forest = () => {
+const Forest = ({navigation, lastEventType}) => {
+  // setTimeout(() => {
+  //   navigation.navigate('hylia', {title: 'hylifa'});
+  // }, 2000);
+  if (lastEventType === 'swipeLeft') {
+    navigation.navigate('hylia', {title: 'hylia'});
+  }
   return (
     <Image
       source={{
@@ -57,33 +84,47 @@ const Forest = () => {
     />
   );
 };
+
+const TvApp = () => {
+  const [lastEventType, setLastEventType] = useState('');
+  const myTVEventHandler = evt => {
+    setLastEventType(evt.eventType);
+    // if (evt.eventType === "swipeRight") {
+    //   navigation.navigate('forest', {title: 'forest'});
+    // }
+  };
+  if (Platform.isTV) {
+    useTVEventHandler(myTVEventHandler);
+  }
+  return (
+    <NavigationContainer>
+      <Text>{lastEventType}</Text>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="hylia"
+          options={{
+            lastEventType: 'hello',
+          }}>
+          {props => <Hylia {...props} lastEventType={lastEventType} />}
+        </Stack.Screen>
+        <Stack.Screen
+          name="forest"
+          options={{
+            lastEventType: 'hello',
+          }}>
+          {props => <Forest {...props} lastEventType={lastEventType} />}
+        </Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
 class App extends React.Component {
   state = {
     posts: [],
   };
 
   render() {
-    return (
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="hylia"
-            component={Hylia}
-            options={{
-              title: 'lake hylia',
-            }}
-            onPress={() => navigation.navigate('forest', {title: 'forest'})}
-          />
-          <Stack.Screen
-            name="forest"
-            component={Forest}
-            options={{
-              title: 'forest',
-            }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    );
+    return <TvApp />;
   }
 }
 
