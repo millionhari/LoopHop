@@ -23,8 +23,11 @@ import {
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Video} from './components/Video';
+import {Clock} from './components/Clock';
 const Stack = createNativeStackNavigator();
 const Item = TabBarIOS.Item;
+const LIBRARY =
+  '/Users/michaelhari/Development/LoopHop/ios/LoopHop/Images.xcassets/library.imageset/library.jpg';
 
 const styles = StyleSheet.create({
   container: {
@@ -49,8 +52,58 @@ const styles = StyleSheet.create({
   },
 });
 
+// const GridFeed = () => {
+//   const [posts, setPosts] = useState({});
+
+//   useEffect(()=> {
+//     fetch('https://www.reddit.com/r/pic/top.json?t=year')
+//       .then(response => response.json())
+//       .then(json => {
+//         const posts = json.data.children.map(child => child.data);
+//         setPosts(posts);
+//       });
+//   })
+
+//   <ScrollView contentContainerStyle={styles.container}>
+//     {posts.map(post => (
+//       <View style={styles.tile} key={post.id}>
+//         <TouchableHighlight
+//           style={styles.highlight}
+//           underlayColor="#a8dadc"
+//           // We use onPress to open Modal and to set selected image url to state
+//           onPress={() =>
+//             this.setState({modalVisible: true, selectedImage: post.url})
+//           }>
+//           <ImageBackground
+//             style={{width: '100%', height: '100%'}}
+//             source={{uri: post.thumbnail}}
+//             imageStyle={styles.background}
+//           />
+//         </TouchableHighlight>
+//         <Text style={styles.title}>{post.title}</Text>
+//       </View>
+//     ))}
+//     <Modal
+//       animationType={'fade'}
+//       transparent={true}
+//       visible={this.state.modalVisible}
+//       onRequestClose={() => this.setState({modalVisible: false})}>
+//       {/*there is a bug in react native tv os: modal will not close properly, unless you wrap it's content into TouchableHighlight */}
+//       <TouchableHighlight
+//         activeOpacity={1}
+//         onPress={() => this.setState({modalVisible: false})}>
+//         <Image
+//           source={{uri: this.state.selectedImage}}
+//           style={{width: '100%', height: '100%'}}
+//         />
+//       </TouchableHighlight>
+//     </Modal>
+//   </ScrollView>;
+// }
+
 const TvApp = () => {
   const [lastEventType, setLastEventType] = useState('');
+
   const myTVEventHandler = evt => {
     setLastEventType(evt.eventType);
     // if (evt.eventType === "swipeRight") {
@@ -68,7 +121,8 @@ const TvApp = () => {
           console.log('pressed');
         }}
         isTvSelectable={true}>
-        <Video uri="https://i0.wp.com/www.mattvince.com/wp-content/uploads/2019/04/Lake-Hylia_thumb.jpg?fit=768%2C432&ssl=1" />
+        <Clock />
+        <Video uri={LIBRARY} />
       </Item>
       <Item title="Animations">
         <Video uri="https://wallpaperaccess.com/full/42613.jpg" />
@@ -76,11 +130,8 @@ const TvApp = () => {
     </TabBarIOS>
   );
 };
-class App extends React.Component {
-  state = {
-    posts: [],
-  };
 
+class App extends React.Component {
   render() {
     return <TvApp />;
   }
