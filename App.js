@@ -23,8 +23,9 @@ import {
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Video} from './components/Video';
+import {ImageExport} from './components/ImageExport';
 import {Clock} from './components/Clock';
-import {Animations} from "./components/Animations";
+import {Animations} from './components/Animations';
 const Stack = createNativeStackNavigator();
 const Item = TabBarIOS.Item;
 
@@ -113,7 +114,7 @@ const TvApp = () => {
     useTVEventHandler(myTVEventHandler);
   }
   return (
-    <TabBarIOS>
+    <TabBarIOS showHideTransition={true}>
       <Item
         title="Now Playing"
         onPress={() => {
@@ -124,7 +125,7 @@ const TvApp = () => {
         <Video />
       </Item>
       <Item title="Animations">
-        <Animations/>
+        <Animations />
       </Item>
     </TabBarIOS>
   );
