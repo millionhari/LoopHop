@@ -1,10 +1,12 @@
 import React from 'react';
-import {Image} from 'react-native';
+import {Image, View, TouchableHighlight} from 'react-native';
 
 export const ImageExport = ({navigation, lastEventType, uri, position}) => {
   return (
-    <>
-      <Image source={require('../images/library.jpg')} />
-    </>
+    <View>
+      <TouchableHighlight>
+        <Image source={require('../images/library.jpg')} />
+      </TouchableHighlight>
+    </View>
   );
 };
