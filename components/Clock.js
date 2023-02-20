@@ -38,15 +38,12 @@ export const Clock = () => {
   const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
   let colonTransparency;
 
-  const timeString =
-    formattedHours + (showColon ? ':' : ' ') + formattedMinutes + ' ' + amPm;
-
   colonTransparency = showColon ? 'white' : 'transparent';
 
   return (
     <View style={style.container}>
       <Text style={style.font}>
-        {formattedHours}
+        {formattedHours }
         <Text style={{color: colonTransparency}}>:</Text>
         {formattedMinutes + ' '}
         {amPm}

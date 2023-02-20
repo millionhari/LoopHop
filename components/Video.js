@@ -5,9 +5,7 @@ export const Video = ({navigation, lastEventType, uri, position}) => {
   return (
     <>
       <Image
-        source={{
-          uri,
-        }}
+        source={require('../images/library.jpg')}
         style={{width: '100%', height: '100%'}}
       />
     </>

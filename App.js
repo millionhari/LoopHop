@@ -24,10 +24,9 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Video} from './components/Video';
 import {Clock} from './components/Clock';
+import {Animations} from "./components/Animations";
 const Stack = createNativeStackNavigator();
 const Item = TabBarIOS.Item;
-const LIBRARY =
-  '/Users/michaelhari/Development/LoopHop/ios/LoopHop/Images.xcassets/library.imageset/library.jpg';
 
 const styles = StyleSheet.create({
   container: {
@@ -118,14 +117,14 @@ const TvApp = () => {
       <Item
         title="Now Playing"
         onPress={() => {
-          console.log('pressed');
+          // console.log('pressed');
         }}
         isTvSelectable={true}>
         <Clock />
-        <Video uri={LIBRARY} />
+        <Video />
       </Item>
       <Item title="Animations">
-        <Video uri="https://wallpaperaccess.com/full/42613.jpg" />
+        <Animations/>
       </Item>
     </TabBarIOS>
   );
