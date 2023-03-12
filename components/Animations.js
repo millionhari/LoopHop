@@ -40,11 +40,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export const Animations = () => {
-  const [posts, setPosts] = useState();
-  useEffect(() => {
-    setPosts(images);
-  }, []);
+export const Animations = ({setLoopable, nowPlaying}) => {
+  const log = (image) => {
+    setLoopable(image);
+    console.log(nowPlaying.current)
+  };
 
   return (
     <ScrollView
@@ -65,7 +65,8 @@ export const Animations = () => {
               magnification: 1.07,
               tiltAngle: -0.02,
               pressMagnification: 0.99,
-            }}>
+            }}
+            onPress={log.bind(this, image)}>
             <ImageBackground
               style={{width: '100%', height: '100%'}}
               source={image}></ImageBackground>

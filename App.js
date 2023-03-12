@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   ImageBackground,
   StyleSheet,
@@ -26,33 +26,39 @@ import {Video} from './components/Video';
 import {ImageExport} from './components/ImageExport';
 import {Clock} from './components/Clock';
 import {Animations} from './components/Animations';
+import {images} from './images/images';
 const Item = TabBarIOS.Item;
+const DEFAULT_ANIMATION = images.library;
 
 const TvApp = () => {
-  const [lastEventType, setLastEventType] = useState('');
+  const [loopable, setLoopable] = useState(DEFAULT_ANIMATION);
+  const nowPlaying = useRef();
 
-  const myTVEventHandler = evt => {
-    setLastEventType(evt.eventType);
-    // if (evt.eventType === "swipeRight") {
-    //   navigation.navigate('forest', {title: 'forest'});
-    // }
-  };
-  if (Platform.isTV) {
-    useTVEventHandler(myTVEventHandler);
-  }
+  // const myTVEventHandler = evt => {
+  // setLastEventType(evt.eventType);
+  // if (evt.eventType === "swipeRight") {
+  //   navigation.navigate('forest', {title: 'forest'});
+  // }
+  // };
+  // if (Platform.isTV) {
+  //   useTVEventHandler(myTVEventHandler);
+  // }
+
   return (
     <TabBarIOS showHideTransition={true}>
       <Item
         title="Now Playing"
         onPress={() => {
-          // console.log('pressed');
+          console.log('pressed now playing');
         }}
-        isTvSelectable={true}>
-        <Clock />
-        <Video />
+        ref={nowPlaying}>
+        <View>
+          <Clock />
+          <Video loopable={loopable} />
+        </View>
       </Item>
-      <Item title="Animations">
-        <Animations />
+      <Item title="Animations" showHideTransition={true}>
+        <Animations setLoopable={setLoopable} nowPlaying={nowPlaying} />
       </Item>
     </TabBarIOS>
   );

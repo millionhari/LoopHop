@@ -1,11 +1,11 @@
 import React from 'react';
 import {Image} from 'react-native';
 
-export const Video = ({navigation, lastEventType, uri, position}) => {
+export const Video = ({loopable}) => {
   return (
     <>
       <Image
-        source={require('../images/library.jpg')}
+        source={loopable}
         style={{width: '100%', height: '100%'}}
       />
     </>
